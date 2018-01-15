@@ -1,0 +1,103 @@
+Resources:
+  MyVPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      EnableDnsHostnames: true
+  MySubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: "10.0.0.0/24"
+      MapPublicIpOnLaunch: true
+      VpcId: 
+        Ref: MyVPC
+  MyInternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+  MyGatewayAttachment:  
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties: 
+      InternetGatewayId: 
+        Ref: MyInternetGateway
+      VpcId: 
+        Ref: MyVPC
+  MyRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties: 
+      VpcId: 
+        Ref: MyVPC
+  MyRoute:
+    Type: "AWS::EC2::Route"
+    Properties: 
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: 
+        Ref: MyInternetGateway
+      RouteTableId: 
+        Ref: MyRouteTable
+  MySubnetRouteTableAssociation:      
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties: 
+      RouteTableId: 
+        Ref: MyRouteTable
+      SubnetId: 
+        Ref: MySubnet
+  MySecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: "ts-test-secgroup"
+      GroupDescription: "Test sg for cloudformation vpc"
+      SecurityGroupIngress:
+        - CidrIp: 168.140.181.7/32
+          Description: only-allowing-ssh-from-local
+          FromPort: '22'
+          IpProtocol: tcp
+          ToPort: '22'
+        - CidrIp: 0.0.0.0/0
+          Description: allow-http-access
+          FromPort: '80'
+          IpProtocol: tcp
+          ToPort: '80' 
+        - CidrIp: 0.0.0.0/0
+          Description: allow-https-access
+          FromPort: '443'
+          IpProtocol: tcp
+          ToPort: '443'
+        - CidrIp: '168.140.181.7/32'
+          Description: allow-jenkins-access
+          FromPort: '8080'
+          IpProtocol: tcp
+          ToPort: '8080'  
+      VpcId: 
+        Ref: MyVPC
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-ff4ea59d
+      InstanceType: t2.micro
+      KeyName: trystansykes-cevo-dev
+      SecurityGroupIds:
+        - Ref: MySecurityGroup
+      SubnetId:
+        Ref: MySubnet
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -v
+            sudo yum install epel-release
+            sudo yum clean all
+            sudo yum update -y
+            sudo yum install java-1.8.0-openjdk.x86_64 -y
+            sudo cp /etc/profile /etc/profile_backup
+            echo 'export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java' | sudo tee -a /etc/profile
+            echo 'export JRE_HOME=/usr/lib/jvm/jre' | sudo tee -a /etc/profile
+            source /etc/profile
+            sudo ln -sfn /usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java  /usr/bin/java
+            sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+            sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+            sudo yum install jenkins -y
+            sudo sed -i '/\/etc\/alternatives\/java/ d' /etc/init.d/jenkins
+            sudo sed -i '/\/usr\/lib\/jvm\/java-1.7.0\/bin\/java/ d' /etc/init.d/jenkins
+            sudo service jenkins start
+            sudo chkconfig jenkins on
+            curl -X POST --data-urlencode "payload={\"channel\": \"#test-notifications\", \"username\": \"JenkinsBootBot\", \"text\": \"Password for newly booted jenkins is: `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`\nThe public DNSname is: `curl http://169.254.169.254/latest/meta-data/public-hostname`:8080\nThe instance id is: `curl http://169.254.169.254/latest/meta-data/instance-id`\nThe public IP is: `curl http://169.254.169.254/latest/meta-data/public-ipv4`\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+
+
