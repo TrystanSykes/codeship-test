@@ -1,5 +1,4 @@
-// var AWS = require('aws-sdk');
-console.log('testing if the above will break again')
+var AWS = require('aws-sdk');
 exports.handler = (event, context, callback) => {
     var region = event.Records[0].awsRegion
     var bucket = event.Records[0].s3.bucket.name
