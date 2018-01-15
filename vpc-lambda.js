@@ -8,21 +8,20 @@ exports.handler = (event, context, callback) => {
         StackName: "ts-test-vpc-jenkins",
         TemplateURL: `https://s3-${region}.amazonaws.com/${bucket}/${key}`
     }
-    var stackMessage = ''
-    cloudformation.updateStack(params, function (err, data) {
+    var stackMessage = cloudformation.updateStack(params, function (err, data) {
         if (err) {
             cloudformation.createStack(params, function (err, data) {
                 if (err) {
-                    stackMessage = 'stack is up to date'
                     console.log(err, err.stack);  
+                    return 'stack is up to date'
                 } else {
-                    stackMessage = 'creating stack'
                     console.log(data);
+                    return 'creating stack'
                 }     
             });
         } else {
-            stackMessage = 'updating stack'
             console.log(data);
+            return 'updating stack'
         }
     });
     callback(null, stackMessage);
