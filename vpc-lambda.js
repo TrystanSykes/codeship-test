@@ -1,5 +1,5 @@
 var AWS = require('aws-sdk');
-const stackMessage = []
+const stackMessage = ''
 exports.handler = (event, context, callback) => {
     var region = event.Records[0].awsRegion
     var bucket = event.Records[0].s3.bucket.name
@@ -14,16 +14,16 @@ exports.handler = (event, context, callback) => {
             cloudformation.createStack(params, function (err, data) {
                 if (err) {
                     console.log(err, err.stack);  
-                    stackMessage.push('stack is up to date')
+                    stackMessage = 'stack is up to date'
                 } else {
                     console.log(data);
-                    stackMessage.push('creating stack')
+                    stackMessage = 'creating stack'
                 }     
             });
         } else {
             console.log(data);
-            stackMessage.push('updating stack')
+            stackMessage = 'updating stack'
         }
     });
-    callback(null, stackMessage[0]);
+    callback(null, stackMessage);
 };
