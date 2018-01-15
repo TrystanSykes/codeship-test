@@ -17,5 +17,5 @@ exports.handler = (event, context, callback) => {
         } // an error occurred
         else     console.log(data);           // successful response
     });
-    callback(null, 'attempting stack creation');
+    callback(null, 'Attempting stack creation');
 };
