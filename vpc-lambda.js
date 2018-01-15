@@ -1,4 +1,5 @@
 var AWS = require('aws-sdk');
+const stackMessage = []
 exports.handler = (event, context, callback) => {
     var region = event.Records[0].awsRegion
     var bucket = event.Records[0].s3.bucket.name
@@ -8,7 +9,6 @@ exports.handler = (event, context, callback) => {
         StackName: "ts-test-vpc-jenkins",
         TemplateURL: `https://s3-${region}.amazonaws.com/${bucket}/${key}`
     }
-    const stackMessage = []
     cloudformation.updateStack(params, function (err, data) {
         if (err) {
             cloudformation.createStack(params, function (err, data) {
