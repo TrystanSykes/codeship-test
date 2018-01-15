@@ -12,15 +12,15 @@ exports.handler = (event, context, callback) => {
     cloudformation.updateStack(params, function (err, data) {
         if (err) {
             cloudformation.createStack(params, function (err, data) {
-                if (err) console.log(err, err.stack);
-                message = 'stack is up to date'
-                else {
+                if (err) {
+                    console.log(err, err.stack);  
+                    message = 'stack is up to date'
+                } else {
                     console.log(data);
                     message = 'creating stack'
                 }     
             });
-        }
-        else {
+        } else {
             console.log(data);
             message = 'updating stack'
         }
