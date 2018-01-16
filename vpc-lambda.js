@@ -11,8 +11,8 @@ exports.handler = (event, context, callback) => {
     cloudformation.listStacks(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else {     console.log(data);
-            data.forEach(function(item){
-                console.log(item)
+            data.StackSummaries.forEach(function(summary){
+                console.log(summary)
             });
         }
     });
