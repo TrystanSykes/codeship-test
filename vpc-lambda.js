@@ -10,19 +10,20 @@ exports.handler = (event, context, callback) => {
         TemplateURL: `https://s3-${region}.amazonaws.com/${bucket}/${key}`
     }
     cloudformation.updateStack(params, function (err, data) {
-        if (err.message === 'No updates are to be performed.') {
-            stackMessage.push(err.message)
-        } else if (err.message === 'Stack [ts-test-vpc-jenkins] does not exist') {
-            cloudformation.createStack(params, function (err, data) {
-                if (err) {
-                    console.log(err, err.stack);
-                    stackMessage.push(err);
-                } else {
-                    console.log(data);
-                    stackMessage.push('creating stack')
-                }     
-            });
-        } else {
+        if (err) {
+            if (err.message === 'No updates are to be performed.') {
+                stackMessage.push(err.message)
+            } else if (err.message === 'Stack [ts-test-vpc-jenkins] does not exist') {
+                cloudformation.createStack(params, function (err, data) {
+                    if (err) {
+                        console.log(err, err.stack);
+                        stackMessage.push(err);
+                    } else {
+                        console.log(data);
+                        stackMessage.push('creating stack')
+                    }     
+                });
+            } else {
             console.log(data);
             stackMessage.push('updating stack')
         }
