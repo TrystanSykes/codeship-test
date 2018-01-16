@@ -1,5 +1,5 @@
 var AWS = require('aws-sdk');
-const stackMessage = []
+const stackMessage = [];
 exports.handler = (event, context, callback) => {
     var region = event.Records[0].awsRegion
     var bucket = event.Records[0].s3.bucket.name
