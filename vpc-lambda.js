@@ -21,12 +21,15 @@ exports.handler = (event, context, callback) => {
                     } else {
                         console.log(data);
                         stackMessage.push('creating stack')
-                    }     
+                    }
                 });
             } else {
+                stackMessage.push(err.message)
+            }     
+        } else {
             console.log(data);
             stackMessage.push('updating stack')
         }
     });
     callback(null, stackMessage[0]);
-};
+});
