@@ -6,31 +6,21 @@ exports.handler = (event, context, callback) => {
     var key = event.Records[0].s3.object.key
     var cloudformation = new AWS.CloudFormation();
     var params = {
-        StackStatusFilter: ["CREATE_COMPLETE", "ROLLBACK_COMPLETE", "UPDATE_COMPLETE"]
-    }
-    cloudformation.listStacks(params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else {     console.log(data);
-            data.StackSummaries.forEach(function(summary){
-                console.log(summary)
-            });
-        }
-    });
-    params = {
         StackName: "ts-test-vpc-jenkins",
         TemplateURL: `https://s3-${region}.amazonaws.com/${bucket}/${key}`
     }
     cloudformation.updateStack(params, function (err, data) {
         if (err) {
-            cloudformation.createStack(params, function (err, data) {
-                if (err) {
-                    console.log(err, err.stack);  
-                    stackMessage.push('stack is up to date')
-                } else {
-                    console.log(data);
-                    stackMessage.push('creating stack')
-                }     
-            });
+            console.log(err)
+            // cloudformation.createStack(params, function (err, data) {
+            //     if (err) {
+            //         console.log(err, err.stack);  
+            //         stackMessage.push('stack is up to date')
+            //     } else {
+            //         console.log(data);
+            //         stackMessage.push('creating stack')
+            //     }     
+            // });
         } else {
             console.log(data);
             stackMessage.push('updating stack')
