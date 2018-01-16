@@ -98,6 +98,6 @@ Resources:
             sudo sed -i '/\/usr\/lib\/jvm\/java-1.7.0\/bin\/java/ d' /etc/init.d/jenkins
             sudo service jenkins start
             sudo chkconfig jenkins on
-            curl -X POST --data-urlencode "payload={\"channel\": \"#test-notifications\", \"username\": \"JenkinsBootBot\", \"text\": \"Password for newly booted jenkins is: `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`\nThe public DNSname is: `curl http://169.254.169.254/latest/meta-data/public-hostname`:8080\nThe instance id is: `curl http://169.254.169.254/latest/meta-data/instance-id`\nThe public IP is: `curl http://169.254.169.254/latest/meta-data/public-ipv4`\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+            curl -X POST --data-urlencode "payload={\"channel\": \"#test-notifications\", \"username\": \"JenkinsBootBot\", \"text\": \"Password for newly booted jenkins is: `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`\nThe public DNSname is: `curl http://169.254.169.254/latest/meta-data/public-hostname`:8080\nThe instance id is: `curl http://169.254.169.254/latest/meta-data/instance-id`\nThe public IP is: `curl http://169.254.169.254/latest/meta-data/public-ipv4`\", \"icon_emoji\": \":potato:\"}" https://hooks.slack.com/services/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
 
 
