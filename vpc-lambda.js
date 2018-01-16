@@ -31,5 +31,5 @@ exports.handler = (event, context, callback) => {
             stackMessage.push('updating stack')
         }
     });
-    callback(null, stackMessage[stackMessage.length - 1];
+    callback(null, stackMessage[stackMessage.length - 1]);
 };
