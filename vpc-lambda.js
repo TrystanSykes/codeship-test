@@ -13,6 +13,7 @@ exports.handler = (event, context, callback) => {
         if (updateErr) {
             if (updateErr.message === 'No updates are to be performed.') {
                 stackMessage.push(updateErr.message)
+                console.log(updateErr.message)
             } else if (updateErr.message === 'Stack [ts-test-vpc-jenkins] does not exist') {
                 cloudformation.createStack(params, function (createErr, data) {
                     if (createErr) {
@@ -25,6 +26,7 @@ exports.handler = (event, context, callback) => {
                 });
             } else {
                 stackMessage.push(updateErr.message)
+                console.log(updateErr.message)
             }     
         } else {
             console.log(data);
