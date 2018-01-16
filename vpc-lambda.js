@@ -32,4 +32,4 @@ exports.handler = (event, context, callback) => {
         }
     });
     callback(null, stackMessage[0]);
-});
+};
