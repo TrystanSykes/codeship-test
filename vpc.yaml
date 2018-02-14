@@ -46,7 +46,7 @@ Resources:
       GroupName: "ts-test-secgroup"
       GroupDescription: "Test sg for cloudformation vpc"
       SecurityGroupIngress:
-        - CidrIp: 168.140.181.7/32
+        - CidrIp: 144.130.171.62/32
           Description: only-allowing-ssh-from-local
           FromPort: '22'
           IpProtocol: tcp
@@ -61,7 +61,7 @@ Resources:
           FromPort: '443'
           IpProtocol: tcp
           ToPort: '443'
-        - CidrIp: '168.140.181.7/32'
+        - CidrIp: '144.130.171.62/32'
           Description: allow-jenkins-access
           FromPort: '8080'
           IpProtocol: tcp
